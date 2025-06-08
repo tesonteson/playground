@@ -1,0 +1,5 @@
+uv.lock
+.venv
+data
+config/settings.json
+!config/.gitkeep
