@@ -1,0 +1,209 @@
+# Enhanced AWS Architecture Diagram
+# Features:
+# - AWS VPC with Availability Zone
+# - Public and Private Subnets
+# - Load Balancer, Application, and Data Services
+# - Animated data flow connections
+
+explanation: |md
+    # AWS Architecture Overview
+    - **AWS VPC**: Virtual Private Cloud setup
+    - **Public Subnet**: Load balancer for external traffic
+    - **Private Subnet**: Secure application and data layer
+    - **Data Flow**: Real-time streaming and storage pipeline
+|
+
+explanation.shape: rectangle
+explanation.style: {
+    fill: "#f0f8ff"
+    stroke: "#4a90e2"
+    stroke-width: 2
+}
+
+# Main AWS VPC Container
+aws: AWS VPC {
+    icon: https://icons.terrastruct.com/aws%2FNetworking%20&%20Content%20Delivery%2FAmazon-VPC.svg
+    style: {
+        fill: "#e8f4fd"
+        stroke: "#2e86ab"
+        stroke-width: 3
+    }
+
+    # internet gateway
+    igw: Internet Gateway {
+        icon: https://icons.terrastruct.com/aws%2FNetworking%20&%20Content%20Delivery%2FAmazon-VPC_Internet-Gateway_light-bg.svg
+        style: {
+            font-size: 12
+            fill: "#d4edda"
+        }
+    }
+
+    # Availability Zone Container
+    az: Availability Zone {
+        style: {
+            fill: "#f9f9f9"
+            stroke: "#666"
+            stroke-width: 2
+            stroke-dash: 5
+        }
+
+        # Public Subnet
+        public: Public Subnet {
+            style: {
+                stroke: "#28a745"
+                stroke-width: 2
+                font-color: "#155724"
+                fill: "#d4edda"
+            }
+
+            alb: Application Load Balancer {
+                icon: https://icons.terrastruct.com/aws%2FNetworking%20&%20Content%20Delivery%2FElastic-Load-Balancing.svg
+                style: {
+                    font-size: 14
+                    # font-weight: bold
+                }
+            }
+        }
+
+        # Private Subnet
+        private: Private Subnet {
+            style: {
+                stroke: "#dc3545"
+                stroke-width: 2
+                font-color: "#721c24"
+                fill: "#f8d7da"
+            }
+
+            app: Application Server {
+                icon: https://icons.terrastruct.com/aws%2FCompute%2F_Instance%2FAmazon-EC2_Instance_light-bg.svg
+                style: {
+                    font-size: 14
+                    # font-weight: bold
+                }
+            }
+
+            pg: PostgreSQL Database {
+                icon: https://icons.terrastruct.com/dev%2Fpostgresql.svg
+                style: {
+                    font-size: 14
+                    fill: "#336791"
+                    font-color: white
+                }
+            }
+
+            kafka: Apache Kafka {
+                icon: https://icons.terrastruct.com/aws%2FAnalytics%2FAmazon-Managed-Streaming-for-Kafka.svg
+                style: {
+                    font-size: 14
+                }
+            }
+
+            emr: Amazon EMR {
+                icon: https://icons.terrastruct.com/aws%2FAnalytics%2FAmazon-EMR.svg
+                style: {
+                    font-size: 14
+                }
+            }
+
+            s3: Amazon S3 {
+                icon: https://icons.terrastruct.com/aws%2FStorage%2FAmazon-Simple-Storage-Service-S3_Bucket_light-bg.svg
+                style: {
+                    font-size: 14
+                }
+            }
+        }
+    }
+}
+
+# External User
+user: End Users {
+    icon: https://icons.terrastruct.com/essentials%2F359-users.svg
+    style: {
+        fill: "#fff3cd"
+        stroke: "#856404"
+        font-color: "#856404"
+    }
+}
+
+# Connection flows with animations and labels
+user -> aws.igw: HTTP/HTTPS Traffic {
+    style: {
+        animated: true
+        stroke: "#007bff"
+        stroke-width: 3
+    }
+}
+
+aws.igw -> aws.az.public.alb: Route Traffic {
+    style: {
+        animated: true
+        stroke: "#28a745"
+        stroke-width: 2
+    }
+}
+
+aws.az.public.alb -> aws.az.private.app: Load Balanced Requests {
+    style: {
+        animated: true
+        stroke: "#fd7e14"
+        stroke-width: 3
+    }
+}
+
+aws.az.private.app -> aws.az.private.pg: Database Queries {
+    style: {
+        animated: true
+        stroke: "#6f42c1"
+        stroke-width: 2
+    }
+}
+
+aws.az.private.app -> aws.az.private.kafka: Event Messages {
+    style: {
+        animated: true
+        stroke: "#e83e8c"
+        stroke-width: 2
+    }
+}
+
+aws.az.private.kafka -> aws.az.private.emr: Stream Processing {
+    style: {
+        animated: true
+        stroke: "#20c997"
+        stroke-width: 2
+    }
+}
+
+aws.az.private.emr -> aws.az.private.s3: Processed Data Storage {
+    style: {
+        animated: true
+        stroke: "#17a2b8"
+        stroke-width: 2
+    }
+}
+
+# Return data flow
+aws.az.private.pg -> aws.az.private.app: Query Results {
+    style: {
+        animated: true
+        stroke: "#6c757d"
+        stroke-width: 1
+        stroke-dash: 3
+    }
+}
+
+# Optional: Add security groups representation
+security_note: |md
+    ## Security Features
+    - **Public Subnet**: Internet-facing components
+    - **Private Subnet**: Internal services (no direct internet access)
+    - **Security Groups**: Act as virtual firewalls
+    - **NACLs**: Network-level access control
+|
+
+security_note.shape: rectangle
+security_note.style: {
+    fill: "#fff3cd"
+    stroke: "#856404"
+    font-size: 12
+}
